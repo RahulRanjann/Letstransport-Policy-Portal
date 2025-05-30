@@ -56,9 +56,6 @@ export function Header() {
             <Link href="/search" className={navLinkClasses("/search")}>
               Search
             </Link>
-            <Link href="/org-chart" className={navLinkClasses("/org-chart")}>
-              Org Chart
-            </Link>
           </nav>
 
           {/* Right side */}
@@ -98,13 +95,6 @@ export function Header() {
                 onClick={() => setIsMenuOpen(false)}
               >
                 Search
-              </Link>
-              <Link
-                href="/org-chart"
-                className={mobileNavLinkClasses("/org-chart")}
-                onClick={() => setIsMenuOpen(false)}
-              >
-                Org Chart
               </Link>
             </nav>
           </div>
