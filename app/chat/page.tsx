@@ -49,22 +49,69 @@ export default function ChatPage() {
         "When is the appraisal cycle?",
       ]
 
-  // Function to process message content and highlight important parts
   const processMessageContent = (content: string) => {
-    const parts = content.split(/(\[HIGHLIGHT\].*?\[\/HIGHLIGHT\])/g)
+    const elements: (string | JSX.Element)[] = [];
+    // Regex to find [HIGHLIGHT] blocks, [text](url) links, or **bold** text
+    // It captures the full match, and also the inner text for highlights/bold, and text/url for links
+    const regex =
+      /(\[HIGHLIGHT\](.*?)\[\/HIGHLIGHT\])|(\[([^\]\[]+?)\]\(([^)\s]+?)\))|(\*\*(.*?)\*\*)/g;
+    let lastIndex = 0;
+    let match;
 
-    return parts.map((part, index) => {
-      if (part.startsWith("[HIGHLIGHT]") && part.endsWith("[/HIGHLIGHT]")) {
-        const highlightedText = part.replace(/\[HIGHLIGHT\]|\[\/HIGHLIGHT\]/g, "")
-        return (
-          <span key={index} className="bg-yellow-200 px-1 py-0.5 rounded font-semibold text-gray-900">
+    while ((match = regex.exec(content)) !== null) {
+      // Add text before the current match
+      if (match.index > lastIndex) {
+        elements.push(content.substring(lastIndex, match.index));
+      }
+
+      // Check if it's a HIGHLIGHT match
+      if (match[1]) { // Full highlight block like [HIGHLIGHT]text[/HIGHLIGHT]
+        const highlightedText = match[2]; // Inner text for highlight
+        elements.push(
+          <span
+            key={`${match.index}-highlight`}
+            className="bg-yellow-200 px-1 py-0.5 rounded font-semibold text-gray-900"
+          >
             {highlightedText}
           </span>
-        )
+        );
       }
-      return part
-    })
-  }
+      // Check if it's a LINK match
+      else if (match[3]) { // Full link block like [text](url)
+        const linkText = match[4]; // Link text
+        const linkUrl = match[5]; // Link URL
+        elements.push(
+          <a
+            key={`${match.index}-link`}
+            href={linkUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-primary hover:underline"
+          >
+            {linkText}
+          </a>
+        );
+      }
+      // Check if it's a BOLD match
+      else if (match[6]) { // Full bold block like **text**
+        const boldText = match[7]; // Inner text for bold
+        elements.push(
+          <strong key={`${match.index}-bold`} className="font-semibold">
+            {boldText}
+          </strong>
+        );
+      }
+      lastIndex = regex.lastIndex;
+    }
+
+    // Add any remaining text after the last match
+    if (lastIndex < content.length) {
+      elements.push(content.substring(lastIndex));
+    }
+    
+    // Return a React Fragment containing all parts, or the original content if no processing was done
+    return elements.length > 0 ? <>{elements}</> : <>{content}</>;
+  };
 
   return (
     <div className="min-h-screen bg-gray-50">
