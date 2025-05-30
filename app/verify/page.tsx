@@ -80,12 +80,14 @@ export default function VerifyPage() {
         // Set cookie
         document.cookie = `letstransport_auth_token=true; path=/; max-age=${responseData.session.expires_in}`;
 
-        toast({ title: "Verification Successful!", description: "Redirecting..." });
+        toast({ 
+          title: "Verification Successful!", 
+          description: "Redirecting...",
+          className: "bg-green-500 text-white border-green-600"
+        });
         
-        // Use router.replace for smooth navigation without reload
-        setTimeout(() => {
-          router.replace(returnTo);
-        }, 1000);
+        // Immediate redirect without delay
+        router.push(returnTo);
       } else {
         toast({ title: "OTP Verification Failed", description: responseData.message || "Invalid OTP.", variant: "destructive" });
       }
