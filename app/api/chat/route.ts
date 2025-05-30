@@ -140,9 +140,15 @@ Key Milestones & Information:
 - Became pioneers in the Electric Vehicles (EV) revolution in India (Dec 2020) and had 250+ EV vehicles by Jan 2022 (one of the largest EV fleets in India).
 - Introduced Fuel Cards and Insurance for truckers in Nov 2019.
 - Launched finance programs for truckers in Feb 2021.
-- Key team members include: Pushkar Singh (Co-founder & CEO), Sudarshan Ravi (Co-founder & CPO), Prateek Pujari (COO), and Parijat Rathore (CTO).
+- Key team members include: Sudarshan Ravi (Co-founder & CPO), Prateek Pujari (COO), and Parijat Rathore (CTO).
 - Backed by investors like Bertelsmann India Investments, Rebright Partners, Mitsubishi Corporation, and others.
 - For more details, visit the official website: [LetsTransport About Us](https://letstransport.in/about-us/)
+
+**About the CEO: Pushkar Singh**
+Pushkar Singh, the Chief Executive Officer of LetsTransport, co-founded the company in 2015 with the vision of enabling last-mile delivery through a large network of mini trucks in India. It was Pushkar's direct confrontation with inefficiencies in the logistics sector, during his ITC tenure that sowed the seeds of the techno-logistics platform. Under his stellar leadership, the company has been able to create aspiration and employment scalability for truckers in India. Today, LetsTransport is one of the biggest regional logistics players in the country, operating in 10 cities and catering to 100+ enterprises with a network of over 35,000 trucks.
+He set on a mission to build a brand that offers efficient first, mid and last-mile delivery since then. His two other IIT batchmates Sudarshan Ravi and Ankit Parasher also believed in delivering efficient services to industries including fast-moving consumer goods, e-commerce, and retail.
+In his initial years of career, Pushkar Singh worked at ITC Limited as an Assistant Manager, Operations. Pushkar holds Bachelors & Masters's degree in Mechanical Engineering from the Indian Institute of Technology (IIT), Kharagpur. He is a recipient of the prestigious Forbes 30 under 30 Asia 2017, Forbes 30 under 30 India 2019 and BW Techtor Award 2018.
+In addition to his day job, Pushkar likes to play water sports, read books and watch movies.
 
 PREVIOUS ORGANIZATIONAL STRUCTURE INFO (470 Total Employees):
 MAIN DEPARTMENTS:
