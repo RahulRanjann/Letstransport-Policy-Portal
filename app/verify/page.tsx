@@ -17,24 +17,27 @@ export default function VerifyPage() {
   const [returnTo, setReturnTo] = useState('/');
 
   useEffect(() => {
-    const returnToPath = searchParams.get('returnTo');
-    if (returnToPath) {
-      setReturnTo(returnToPath);
+    const returnToPathFromParams = searchParams.get('returnTo');
+    if (returnToPathFromParams) {
+      setReturnTo(returnToPathFromParams);
     }
-    // Check if already authenticated (e.g., from local storage or a quick cookie check)
-    // This is a basic check. In a real app, you might have a more robust session check.
+
+    if (otpSent) {
+      return;
+    }
+
     if (localStorage.getItem('letstransport_auth_token')) {
       toast({ title: "Already authenticated.", description: "Redirecting..." });
-      router.push(returnToPath || '/');
+      router.push(returnToPathFromParams || returnTo || '/');
     }
-  }, [searchParams, router]);
+  }, [searchParams, router, otpSent, returnTo]);
 
   const handleSendOtp = async () => {
     setIsLoading(true);
-    if (!email.endsWith('@letstransport.com') && !email.endsWith('@letstransport.in') && !email.endsWith('@letstransport.team')) {
+    if (!email.endsWith('@letstransport.team')) {
       toast({
         title: "Invalid Email",
-        description: "Please use a valid LetsTransport email address (e.g., @letstransport.com, @letstransport.in, @letstransport.team).",
+        description: "your email is not valid.",
         variant: "destructive",
       });
       setIsLoading(false);

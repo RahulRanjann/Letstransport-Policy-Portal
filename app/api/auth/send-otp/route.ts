@@ -8,8 +8,8 @@ const supabaseAnonKey = process.env.SUPABASE_ANON_KEY!;
 const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 
-// Define valid email domains
-const VALID_DOMAINS = ['@letstransport.com', '@letstransport.in', '@letstransport.team'];
+// Define valid email domains - only @letstransport.team is allowed
+const VALID_DOMAINS = ['@letstransport.team'];
 
 function isValidLetsTransportEmail(email: string): boolean {
   return VALID_DOMAINS.some(domain => email.endsWith(domain));
@@ -24,7 +24,7 @@ export async function POST(request: Request) {
     }
 
     if (!isValidLetsTransportEmail(email)) {
-      return NextResponse.json({ message: 'Invalid LetsTransport email domain.' }, { status: 400 });
+      return NextResponse.json({ message: 'your email is not valid.' }, { status: 400 });
     }
 
     // Use Supabase to send OTP for passwordless login with email
