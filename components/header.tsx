@@ -5,6 +5,7 @@ import { Menu } from "lucide-react"
 import Link from "next/link"
 import { useState } from "react"
 import { usePathname } from "next/navigation"
+import Image from "next/image"
 
 export function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -32,10 +33,13 @@ export function Header() {
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <Link href="/" className="flex items-center space-x-2">
-            <div className="relative">
-              <div className="w-8 h-8 bg-gradient-to-br from-orange-500 to-red-500 rounded transform rotate-45"></div>
-              <div className="absolute top-1 left-1 w-6 h-6 bg-white rounded transform rotate-45"></div>
-            </div>
+            <Image
+              src="/LetsTransport Logos.svg"
+              alt="LetsTransport Logo"
+              width={32}
+              height={32}
+              className="h-8 w-8"
+            />
             <span className="text-xl font-bold text-foreground">
               lets<span className="text-primary">transport</span>
             </span>
