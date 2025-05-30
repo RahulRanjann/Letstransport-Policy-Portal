@@ -8,6 +8,15 @@ import { Header } from "@/components/header"
 import { getPolicyById } from "@/lib/policies"
 import type { JSX } from "react"
 
+// Helper function to format date consistently
+const formatDate = (dateString: string) => {
+  return new Date(dateString).toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit'
+  })
+}
+
 interface PolicyPageProps {
   params: {
     id: string
@@ -152,7 +161,7 @@ export default function PolicyPage({ params }: PolicyPageProps) {
               <div className="flex items-center justify-between pt-4 border-t">
                 <div className="flex items-center text-sm text-gray-500">
                   <Calendar className="h-4 w-4 mr-1" />
-                  Last updated: {new Date(policy.lastUpdated).toLocaleDateString()}
+                  Last updated: {formatDate(policy.lastUpdated)}
                 </div>
 
                 <Button asChild>

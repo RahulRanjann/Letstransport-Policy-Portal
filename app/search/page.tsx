@@ -10,6 +10,15 @@ import Link from "next/link"
 import { Header } from "@/components/header"
 import { policies, searchPolicies, categories } from "@/lib/policies"
 
+// Helper function to format date consistently
+const formatDate = (dateString: string) => {
+  return new Date(dateString).toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit'
+  })
+}
+
 export default function SearchPage() {
   const [searchQuery, setSearchQuery] = useState("")
   const [selectedCategories, setSelectedCategories] = useState<string[]>([])
@@ -150,7 +159,7 @@ export default function SearchPage() {
                         <Badge variant="secondary">{policy.category}</Badge>
                         <div className="flex items-center text-sm text-gray-500">
                           <Calendar className="h-4 w-4 mr-1" />
-                          {new Date(policy.lastUpdated).toLocaleDateString()}
+                          {formatDate(policy.lastUpdated)}
                         </div>
                       </div>
                       <CardTitle className="text-xl mb-2">{highlightText(policy.title, searchQuery)}</CardTitle>

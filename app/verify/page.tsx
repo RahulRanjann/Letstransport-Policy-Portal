@@ -5,7 +5,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { toast } from "@/components/ui/use-toast"; // Assuming you have a toast component
+import { toast } from "@/hooks/use-toast";
 
 export default function VerifyPage() {
   const router = useRouter();
@@ -22,18 +22,17 @@ export default function VerifyPage() {
       setReturnTo(returnToPathFromParams);
     }
 
-    if (otpSent) {
-      return;
-    }
-
-    if (localStorage.getItem('letstransport_auth_token')) {
+    // Only check for existing auth if not in OTP flow
+    if (!otpSent && localStorage.getItem('letstransport_auth_token')) {
       toast({ title: "Already authenticated.", description: "Redirecting..." });
-      router.push(returnToPathFromParams || returnTo || '/');
+      router.replace(returnToPathFromParams || '/');
     }
-  }, [searchParams, router, otpSent, returnTo]);
+  }, [searchParams, otpSent, router]);
 
   const handleSendOtp = async () => {
     setIsLoading(true);
+    
+    // Check if email ends with @letstransport.team
     if (!email.endsWith('@letstransport.team')) {
       toast({
         title: "Invalid Email",
@@ -51,6 +50,7 @@ export default function VerifyPage() {
         body: JSON.stringify({ email }),
       });
       const responseData = await response.json();
+      
       if (response.ok) {
         setOtpSent(true);
         toast({ title: "OTP Sent", description: responseData.message || "Check your email for the OTP." });
@@ -73,16 +73,19 @@ export default function VerifyPage() {
         body: JSON.stringify({ email, otp }),
       });
       const responseData = await response.json();
+      
       if (response.ok && responseData.session) {
-        // Supabase successfully verified and created a session.
-        // The Supabase client library (if you initialize it on the client) will automatically handle the session.
-        // For your custom local storage flag:
-        localStorage.setItem('letstransport_auth_token', responseData.session.access_token); // Store access token or a generic flag
-        // Set the simple cookie for the middleware to recognize the user has passed OTP verification in this session
-        document.cookie = "letstransport_auth_token=true; path=/; max-age=" + responseData.session.expires_in; 
+        // Store auth token
+        localStorage.setItem('letstransport_auth_token', responseData.session.access_token);
+        // Set cookie
+        document.cookie = `letstransport_auth_token=true; path=/; max-age=${responseData.session.expires_in}`;
 
         toast({ title: "Verification Successful!", description: "Redirecting..." });
-        router.push(returnTo);
+        
+        // Use router.replace for smooth navigation without reload
+        setTimeout(() => {
+          router.replace(returnTo);
+        }, 1000);
       } else {
         toast({ title: "OTP Verification Failed", description: responseData.message || "Invalid OTP.", variant: "destructive" });
       }
@@ -107,7 +110,7 @@ export default function VerifyPage() {
                 id="email" 
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="your.name@letstransport.com"
+                placeholder="your.name@letstransport.team"
                 required 
                 className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-orange-500 focus:border-orange-500"
               />

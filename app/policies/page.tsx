@@ -10,6 +10,15 @@ import Link from "next/link"
 import { Header } from "@/components/header"
 import { policies, searchPolicies, categories } from "@/lib/policies"
 
+// Helper function to format date consistently
+const formatDate = (dateString: string) => {
+  return new Date(dateString).toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit'
+  })
+}
+
 export default function PoliciesPage() {
   const [searchQuery, setSearchQuery] = useState("")
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null)
@@ -80,7 +89,7 @@ export default function PoliciesPage() {
               <CardContent>
                 <div className="flex items-center text-sm text-gray-500 mb-4">
                   <Calendar className="h-4 w-4 mr-1" />
-                  Updated: {new Date(policy.lastUpdated).toLocaleDateString()}
+                  Updated: {formatDate(policy.lastUpdated)}
                 </div>
 
                 <div className="flex flex-wrap gap-1 mb-4">
