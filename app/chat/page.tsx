@@ -8,7 +8,7 @@ import { Send, Bot, User, Loader2 } from "lucide-react"
 import { Header } from "@/components/header"
 import { useSearchParams } from "next/navigation"
 import { getPolicyById } from "@/lib/policies"
-import { useEffect, useRef, ReactElement } from "react"
+import { useEffect, useRef, ReactElement, useState } from "react"
 
 export default function ChatPage() {
   const searchParams = useSearchParams()
@@ -16,14 +16,54 @@ export default function ChatPage() {
   const policy = policyId ? getPolicyById(policyId) : null
   const messagesEndRef = useRef<HTMLDivElement>(null)
 
+  // Get user's name from stored email
+  const getUserName = () => {
+    if (typeof window !== 'undefined') {
+      const authToken = localStorage.getItem('letstransport_auth_token')
+      if (authToken) {
+        // Try to get email from localStorage if stored
+        const storedEmail = localStorage.getItem('user_email')
+        console.log('Stored email:', storedEmail) // Debug log
+        if (storedEmail) {
+          // Extract name from email with improved logic
+          const namePart = storedEmail.split('@')[0]
+          
+          // Remove numbers from the end (e.g., rahul1913111054 -> rahul)
+          const nameWithoutNumbers = namePart.replace(/\d+$/, '')
+          
+          // Split by both dots and underscores, then filter out empty parts
+          const nameParts = nameWithoutNumbers
+            .split(/[._]/)
+            .filter(part => part.length > 0)
+            .map(part => part.charAt(0).toUpperCase() + part.slice(1).toLowerCase())
+          
+          const userName = nameParts.join(' ')
+          console.log('Extracted user name:', userName) // Debug log
+          return userName
+        }
+      }
+    }
+    return null
+  }
+
+  const [userName, setUserName] = useState<string | null>(null)
+
+  useEffect(() => {
+    const name = getUserName()
+    setUserName(name)
+  }, [])
+
   const { messages, input, handleInputChange, handleSubmit, isLoading } = useChat({
     api: "/api/chat",
+    body: {
+      userName: userName
+    },
     initialMessages: policy
       ? [
           {
             id: "initial",
             role: "assistant",
-            content: `Hey there! 👋 I'm here to help you with the ${policy.title}. I know policies can sometimes be a bit overwhelming, so feel free to ask me anything about it - I'll break it down in simple terms for you. What would you like to know?`,
+            content: `Hey there${userName ? `, ${userName}` : ''}! 👋 I'm here to help you with the ${policy.title}. I know policies can sometimes be a bit overwhelming, so feel free to ask me anything about it - I'll break it down in simple terms for you. What would you like to know?`,
           },
         ]
       : [
@@ -31,7 +71,7 @@ export default function ChatPage() {
             id: "initial",
             role: "assistant",
             content:
-              "Hi there! 😊 I'm your HR assistant here at Letstransport. Whether you need help with company policies, have questions about leave applications, want to know about benefits, or just need guidance on HR processes - I'm here to help! What can I assist you with today?",
+              `Hi there${userName ? `, ${userName}` : ''}! 😊 I'm your HR assistant here at Letstransport. Whether you need help with company policies, have questions about leave applications, want to know about benefits, or just need guidance on HR processes - I'm here to help! What can I assist you with today?`,
           },
         ],
   })

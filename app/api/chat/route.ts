@@ -3,7 +3,7 @@ import { google } from "@ai-sdk/google"
 import { policies, getDarwinboxAnswerForQuery } from "@/lib/policies"
 
 export async function POST(req: Request) {
-  const { messages } = await req.json()
+  const { messages, userName } = await req.json()
 
   // Get the last user message
   const lastUserMessage = messages[messages.length - 1]?.content
@@ -172,7 +172,7 @@ GEOGRAPHIC DIVISIONS:
 `;
 
   // Ensure systemPrompt is defined HERE, before it's used by streamText
-  const systemPrompt = `You are a friendly and helpful human HR assistant for Letstransport employees. Give direct, concise answers to questions - no more, no less.
+  const systemPrompt = `You are a friendly and helpful human HR assistant for Letstransport employees. Give direct, concise answers to questions - no more, no less.${userName ? ` The user's name is ${userName}, so you can address them personally when appropriate.` : ''}
 
 CORE RULES:
 - Answer exactly what is asked - be precise and to the point

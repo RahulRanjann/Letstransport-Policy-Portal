@@ -77,6 +77,8 @@ export default function VerifyPage() {
       if (response.ok && responseData.session) {
         // Store auth token
         localStorage.setItem('letstransport_auth_token', responseData.session.access_token);
+        // Store user email for personalization
+        localStorage.setItem('user_email', email);
         // Set cookie
         document.cookie = `letstransport_auth_token=true; path=/; max-age=${responseData.session.expires_in}`;
 
