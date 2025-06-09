@@ -31,7 +31,7 @@ export default function ChatPage() {
             id: "initial",
             role: "assistant",
             content:
-              "Hi there! 😊 I'm your friendly HR assistant here at Letstransport. Whether you need help with company policies, have questions about leave applications, want to know about benefits, or just need guidance on HR processes - I'm here to help! What can I assist you with today?",
+              "Hi there! 😊 I'm your HR assistant here at Letstransport. Whether you need help with company policies, have questions about leave applications, want to know about benefits, or just need guidance on HR processes - I'm here to help! What can I assist you with today?",
           },
         ],
   })
