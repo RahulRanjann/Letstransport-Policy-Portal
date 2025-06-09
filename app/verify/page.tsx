@@ -86,8 +86,10 @@ export default function VerifyPage() {
           className: "bg-green-500 text-white border-green-600"
         });
         
-        // Immediate redirect without delay
-        router.push(returnTo);
+        // Use window.location.href for more reliable redirect
+        setTimeout(() => {
+          window.location.href = returnTo;
+        }, 500);
       } else {
         toast({ title: "OTP Verification Failed", description: responseData.message || "Invalid OTP.", variant: "destructive" });
       }

@@ -8,11 +8,13 @@ import { Send, Bot, User, Loader2 } from "lucide-react"
 import { Header } from "@/components/header"
 import { useSearchParams } from "next/navigation"
 import { getPolicyById } from "@/lib/policies"
+import { useEffect, useRef, ReactElement } from "react"
 
 export default function ChatPage() {
   const searchParams = useSearchParams()
   const policyId = searchParams.get("policy")
   const policy = policyId ? getPolicyById(policyId) : null
+  const messagesEndRef = useRef<HTMLDivElement>(null)
 
   const { messages, input, handleInputChange, handleSubmit, isLoading } = useChat({
     api: "/api/chat",
@@ -21,7 +23,7 @@ export default function ChatPage() {
           {
             id: "initial",
             role: "assistant",
-            content: `Hello! I'm here to help you understand the ${policy.title}. You can ask me any questions about this policy, and I'll provide clear explanations. What would you like to know?`,
+            content: `Hey there! 👋 I'm here to help you with the ${policy.title}. I know policies can sometimes be a bit overwhelming, so feel free to ask me anything about it - I'll break it down in simple terms for you. What would you like to know?`,
           },
         ]
       : [
@@ -29,10 +31,15 @@ export default function ChatPage() {
             id: "initial",
             role: "assistant",
             content:
-              "Hello! I'm your Letstransport policy assistant. I can help you understand company policies, answer questions about HR processes, and guide you through various procedures. What would you like to know?",
+              "Hi there! 😊 I'm your friendly HR assistant here at Letstransport. Whether you need help with company policies, have questions about leave applications, want to know about benefits, or just need guidance on HR processes - I'm here to help! What can I assist you with today?",
           },
         ],
   })
+
+  // Auto-scroll to bottom when new messages arrive
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
+  }, [messages, isLoading])
 
   const suggestedQuestions = policy
     ? [
@@ -50,7 +57,7 @@ export default function ChatPage() {
       ]
 
   const processMessageContent = (content: string) => {
-    const elements: (string | JSX.Element)[] = [];
+    const elements: (string | ReactElement)[] = [];
     // Regex to find [HIGHLIGHT] blocks, [text](url) links, or **bold** text
     // It captures the full match, and also the inner text for highlights/bold, and text/url for links
     const regex =
@@ -183,6 +190,9 @@ export default function ChatPage() {
                     </div>
                   </div>
                 )}
+                
+                {/* Invisible element to scroll to */}
+                <div ref={messagesEndRef} />
               </div>
 
               {/* Suggested Questions */}

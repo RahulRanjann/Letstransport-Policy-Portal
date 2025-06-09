@@ -122,8 +122,9 @@ function formatPolicyContent(content: string) {
   return formattedLines
 }
 
-export default function PolicyPage({ params }: PolicyPageProps) {
-  const policy = getPolicyById(params.id)
+export default async function PolicyPage({ params }: PolicyPageProps) {
+  const { id } = await params
+  const policy = getPolicyById(id)
 
   if (!policy) {
     notFound()
