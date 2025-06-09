@@ -47,16 +47,24 @@ export default function ChatPage() {
   }
 
   const [userName, setUserName] = useState<string | null>(null)
+  const [userEmail, setUserEmail] = useState<string | null>(null)
 
   useEffect(() => {
     const name = getUserName()
     setUserName(name)
+    
+    // Get user email
+    if (typeof window !== 'undefined') {
+      const email = localStorage.getItem('user_email')
+      setUserEmail(email)
+    }
   }, [])
 
   const { messages, input, handleInputChange, handleSubmit, isLoading } = useChat({
     api: "/api/chat",
     body: {
-      userName: userName
+      userName: userName,
+      userEmail: userEmail
     },
     initialMessages: policy
       ? [
