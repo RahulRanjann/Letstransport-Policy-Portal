@@ -203,7 +203,7 @@ LetsTransport Policy Assistant
       // Send email using Resend
       const { data, error } = await resend.emails.send({
         from: 'onboarding@resend.dev',
-        to: 'rahul_ranjan@letstransport.team',
+        to: 'vignesh.s@letstransport.team',
         subject: emailSubject,
         html: `
           <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">

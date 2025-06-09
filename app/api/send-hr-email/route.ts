@@ -37,7 +37,7 @@ LetsTransport Policy Assistant
     if (!process.env.RESEND_API_KEY) {
       console.log('RESEND_API_KEY not found. Logging email instead.');
       console.log('EMAIL TO HR:', {
-        to: 'rahul_ranjan@letstransport.team',
+        to: 'vignesh.s@letstransport.team',
         subject: emailSubject,
         content: emailContent,
         html: `Email from: ${userName} (${userEmail})\nQuestion: ${question}`
@@ -56,7 +56,7 @@ LetsTransport Policy Assistant
       // Send actual email to HR
       const { data, error } = await resend.emails.send({
         from: 'LetsTransport AI <noreply@letstransport.team>',
-        to: ['rahul_ranjan@letstransport.team'],
+        to: ['vignesh.s@letstransport.team'],
         subject: emailSubject,
         html: `
           <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
