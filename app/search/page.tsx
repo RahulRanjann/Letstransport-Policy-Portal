@@ -30,10 +30,10 @@ export default function SearchPage() {
     if (selectedCategories.length > 0) {
       results = results.filter((policy) => selectedCategories.includes(policy.category))
     }
-
+    
     return results
   }, [searchQuery, selectedCategories])
-
+  
   const toggleCategory = (category: string) => {
     setSelectedCategories((prev) =>
       prev.includes(category) ? prev.filter((c) => c !== category) : [...prev, category],

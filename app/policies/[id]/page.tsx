@@ -29,14 +29,18 @@ function formatPolicyContent(content: string) {
   const formattedLines: JSX.Element[] = []
   let currentList: string[] = []
   let listType: "ordered" | "unordered" | null = null
+  let keyCounter = 0 // Add a unique key counter
+
+  const getUniqueKey = () => `element-${keyCounter++}` // Helper function for unique keys
 
   const flushList = () => {
     if (currentList.length > 0) {
+      const listKey = getUniqueKey()
       if (listType === "ordered") {
         formattedLines.push(
-          <ol key={formattedLines.length} className="list-decimal list-inside ml-4 mb-4 space-y-1">
+          <ol key={listKey} className="list-decimal list-inside ml-4 mb-4 space-y-1">
             {currentList.map((item, index) => (
-              <li key={index} className="text-gray-700">
+              <li key={`${listKey}-item-${index}`} className="text-gray-700">
                 {item}
               </li>
             ))}
@@ -44,9 +48,9 @@ function formatPolicyContent(content: string) {
         )
       } else {
         formattedLines.push(
-          <ul key={formattedLines.length} className="list-disc list-inside ml-4 mb-4 space-y-1">
+          <ul key={listKey} className="list-disc list-inside ml-4 mb-4 space-y-1">
             {currentList.map((item, index) => (
-              <li key={index} className="text-gray-700">
+              <li key={`${listKey}-item-${index}`} className="text-gray-700">
                 {item}
               </li>
             ))}
@@ -70,21 +74,21 @@ function formatPolicyContent(content: string) {
     if (trimmedLine.startsWith("# ")) {
       flushList()
       formattedLines.push(
-        <h1 key={index} className="text-2xl font-bold text-gray-900 mb-4 mt-6">
+        <h1 key={getUniqueKey()} className="text-2xl font-bold text-gray-900 mb-4 mt-6">
           {trimmedLine.substring(2)}
         </h1>,
       )
     } else if (trimmedLine.startsWith("## ")) {
       flushList()
       formattedLines.push(
-        <h2 key={index} className="text-xl font-semibold text-gray-800 mb-3 mt-5">
+        <h2 key={getUniqueKey()} className="text-xl font-semibold text-gray-800 mb-3 mt-5">
           {trimmedLine.substring(3)}
         </h2>,
       )
     } else if (trimmedLine.startsWith("### ")) {
       flushList()
       formattedLines.push(
-        <h3 key={index} className="text-lg font-medium text-gray-700 mb-2 mt-4">
+        <h3 key={getUniqueKey()} className="text-lg font-medium text-gray-700 mb-2 mt-4">
           {trimmedLine.substring(4)}
         </h3>,
       )
@@ -109,7 +113,7 @@ function formatPolicyContent(content: string) {
     else {
       flushList()
       formattedLines.push(
-        <p key={index} className="text-gray-700 mb-3 leading-relaxed">
+        <p key={getUniqueKey()} className="text-gray-700 mb-3 leading-relaxed">
           {trimmedLine}
         </p>,
       )

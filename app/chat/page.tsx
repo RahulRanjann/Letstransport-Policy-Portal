@@ -1,7 +1,7 @@
 "use client"
 import { useChat } from "ai/react"
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
+import { Textarea } from "@/components/ui/textarea"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Send, Bot, User, Loader2 } from "lucide-react"
@@ -48,6 +48,7 @@ export default function ChatPage() {
 
   const [userName, setUserName] = useState<string | null>(null)
   const [userEmail, setUserEmail] = useState<string | null>(null)
+  const textareaRef = useRef<HTMLTextAreaElement>(null)
 
   useEffect(() => {
     const name = getUserName()
@@ -71,7 +72,7 @@ export default function ChatPage() {
           {
             id: "initial",
             role: "assistant",
-            content: `Hey there${userName ? `, ${userName}` : ''}! 👋 I'm here to help you with the ${policy.title}. I know policies can sometimes be a bit overwhelming, so feel free to ask me anything about it - I'll break it down in simple terms for you. What would you like to know?`,
+            content: `Hey there${userName ? `, ${userName}` : ''}! 👋 I'm Sarah from HR. I'm here to help you with the ${policy.title}. What would you like to know?`,
           },
         ]
       : [
@@ -79,15 +80,45 @@ export default function ChatPage() {
             id: "initial",
             role: "assistant",
             content:
-              `Hi there${userName ? `, ${userName}` : ''}! 😊 I'm your HR assistant here at Letstransport. Whether you need help with company policies, have questions about leave applications, want to know about benefits, or just need guidance on HR processes - I'm here to help! What can I assist you with today?`,
+              `Hey there${userName ? `, ${userName}` : ''}! I'm Sarah from HR. What can I help you with today?`,
           },
         ],
   })
+
+  // Auto-resize textarea
+  const adjustTextareaHeight = () => {
+    const textarea = textareaRef.current
+    if (textarea) {
+      textarea.style.height = 'auto'
+      const newHeight = Math.min(textarea.scrollHeight, 120) // Max height of 120px
+      textarea.style.height = `${newHeight}px`
+    }
+  }
+
+  // Handle input change with auto-resize
+  const handleInputChangeWithResize = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    handleInputChange(e)
+    adjustTextareaHeight()
+  }
+
+  useEffect(() => {
+    adjustTextareaHeight()
+  }, [input])
 
   // Auto-scroll to bottom when new messages arrive
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
   }, [messages, isLoading])
+
+  // Handle Shift+Enter for new line, Enter for submit
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault()
+      if (input.trim() && !isLoading) {
+        handleSubmit(e as any)
+      }
+    }
+  }
 
   const suggestedQuestions = policy
     ? [
@@ -169,118 +200,123 @@ export default function ChatPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 flex flex-col">
       <Header />
 
-      <div className="container mx-auto px-4 py-8">
-        <div className="max-w-4xl mx-auto">
-          {/* Header */}
-          <div className="mb-6">
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">AI Policy Assistant</h1>
+      <div className="flex-1 flex flex-col">
+        {/* Header */}
+        <div className="bg-white border-b px-4 py-4">
+          <div className="max-w-4xl mx-auto">
+            <h1 className="text-2xl font-bold text-gray-900 mb-2">AI Policy Assistant</h1>
             {policy && (
               <div className="flex items-center gap-2">
                 <span className="text-gray-600">Discussing:</span>
                 <Badge variant="secondary">{policy.title}</Badge>
               </div>
             )}
+            <div className="flex items-center gap-2 mt-2">
+              <Bot className="h-4 w-4 text-primary" />
+              <span className="text-sm text-gray-600">Chat with AI Assistant</span>
+              <Badge variant="outline" className="text-xs">
+                Powered by Google Gemini
+              </Badge>
+            </div>
           </div>
+        </div>
 
-          {/* Chat Interface */}
-          <Card className="h-[600px] flex flex-col overflow-hidden">
-            <CardHeader className="border-b flex-shrink-0">
-              <CardTitle className="flex items-center gap-2">
-                <Bot className="h-5 w-5 text-primary" />
-                Chat with AI Assistant
-                <Badge variant="outline" className="text-xs">
-                  Powered by Google Gemini
-                </Badge>
-              </CardTitle>
-            </CardHeader>
-
-            <CardContent className="flex-1 flex flex-col p-0 overflow-hidden">
-              {/* Messages */}
-              <div className="flex-1 overflow-y-auto p-4 space-y-4">
-                {messages.map((message) => (
+        {/* Chat Interface - Full Height */}
+        <div className="flex-1 flex flex-col overflow-hidden">
+          {/* Messages */}
+          <div className="flex-1 overflow-y-auto p-4 bg-white pb-32">
+            <div className="max-w-4xl mx-auto space-y-4">
+              {messages.map((message) => (
+                <div
+                  key={message.id}
+                  className={`flex gap-3 ${message.role === "user" ? "justify-end" : "justify-start"}`}
+                >
                   <div
-                    key={message.id}
-                    className={`flex gap-3 ${message.role === "user" ? "justify-end" : "justify-start"}`}
+                    className={`flex gap-3 max-w-[85%] ${message.role === "user" ? "flex-row-reverse" : "flex-row"}`}
                   >
                     <div
-                      className={`flex gap-3 max-w-[85%] ${message.role === "user" ? "flex-row-reverse" : "flex-row"}`}
+                      className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${
+                        message.role === "user" ? "bg-primary text-white" : "bg-gray-200 text-gray-600"
+                      }`}
                     >
-                      <div
-                        className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${
-                          message.role === "user" ? "bg-primary text-white" : "bg-gray-200 text-gray-600"
-                        }`}
-                      >
-                        {message.role === "user" ? <User className="h-4 w-4" /> : <Bot className="h-4 w-4" />}
-                      </div>
-                      <div
-                        className={`rounded-lg p-3 break-words ${
-                          message.role === "user" ? "bg-primary text-white" : "bg-gray-100 text-gray-900"
-                        }`}
-                      >
-                        <div className="whitespace-pre-wrap break-words">
-                          {message.role === "assistant" ? processMessageContent(message.content) : message.content}
-                        </div>
+                      {message.role === "user" ? <User className="h-4 w-4" /> : <Bot className="h-4 w-4" />}
+                    </div>
+                    <div
+                      className={`rounded-lg p-3 break-words ${
+                        message.role === "user" ? "bg-primary text-white" : "bg-gray-100 text-gray-900"
+                      }`}
+                    >
+                      <div className="whitespace-pre-wrap break-words">
+                        {message.role === "assistant" ? processMessageContent(message.content) : message.content}
                       </div>
                     </div>
                   </div>
-                ))}
+                </div>
+              ))}
 
-                {isLoading && (
-                  <div className="flex gap-3 justify-start">
-                    <div className="w-8 h-8 rounded-full bg-gray-200 text-gray-600 flex items-center justify-center flex-shrink-0">
-                      <Bot className="h-4 w-4" />
-                    </div>
-                    <div className="bg-gray-100 text-gray-900 rounded-lg p-3">
-                      <Loader2 className="h-4 w-4 animate-spin" />
-                    </div>
+              {isLoading && (
+                <div className="flex gap-3 justify-start">
+                  <div className="w-8 h-8 rounded-full bg-gray-200 text-gray-600 flex items-center justify-center flex-shrink-0">
+                    <Bot className="h-4 w-4" />
                   </div>
-                )}
-                
-                {/* Invisible element to scroll to */}
-                <div ref={messagesEndRef} />
-              </div>
-
-              {/* Suggested Questions */}
-              {messages.length <= 1 && (
-                <div className="p-4 border-t bg-gray-50 flex-shrink-0">
-                  <p className="text-sm text-gray-600 mb-2">Suggested questions:</p>
-                  <div className="flex flex-wrap gap-2">
-                    {suggestedQuestions.map((question, index) => (
-                      <Button
-                        key={index}
-                        variant="outline"
-                        size="sm"
-                        onClick={() => handleInputChange({ target: { value: question } } as any)}
-                        className="text-xs"
-                      >
-                        {question}
-                      </Button>
-                    ))}
+                  <div className="bg-gray-100 text-gray-900 rounded-lg p-3">
+                    <Loader2 className="h-4 w-4 animate-spin" />
                   </div>
                 </div>
               )}
+              
+              {/* Invisible element to scroll to */}
+              <div ref={messagesEndRef} />
+            </div>
+          </div>
 
-              {/* Input Form */}
-              <form onSubmit={handleSubmit} className="p-4 border-t flex-shrink-0">
-                <div className="flex gap-2">
-                  <Input
-                    value={input}
-                    onChange={handleInputChange}
-                    placeholder="Ask me anything about company policies..."
-                    disabled={isLoading}
-                    className="flex-1"
-                  />
-                  <Button type="submit" disabled={isLoading || !input.trim()}>
-                    <Send className="h-4 w-4" />
-                  </Button>
+          {/* Suggested Questions - Fixed positioning when showing */}
+          {messages.length <= 1 && (
+            <div className="fixed bottom-28 left-0 right-0 p-4 bg-gray-50 border-t z-40">
+              <div className="max-w-4xl mx-auto">
+                <p className="text-sm text-gray-600 mb-2">Suggested questions:</p>
+                <div className="flex flex-wrap gap-2">
+                  {suggestedQuestions.map((question, index) => (
+                    <Button
+                      key={index}
+                      variant="outline"
+                      size="sm"
+                      onClick={() => handleInputChange({ target: { value: question } } as any)}
+                      className="text-xs"
+                    >
+                      {question}
+                    </Button>
+                  ))}
                 </div>
-              </form>
-            </CardContent>
-          </Card>
+              </div>
+            </div>
+          )}
         </div>
+
+        {/* Fixed Input Form */}
+        <form onSubmit={handleSubmit} className="fixed bottom-0 left-0 right-0 p-4 border-t bg-white z-50 shadow-lg">
+          <div className="max-w-4xl mx-auto">
+            <div className="flex gap-2 items-end">
+              <Textarea
+                value={input}
+                onChange={handleInputChangeWithResize}
+                onKeyDown={handleKeyDown}
+                placeholder="Ask me anything about company policies... (Shift+Enter for new line)"
+                disabled={isLoading}
+                className="flex-1 min-h-[44px] max-h-[120px] resize-none"
+                rows={1}
+                ref={textareaRef}
+              />
+              <Button type="submit" disabled={isLoading || !input.trim()} className="shrink-0">
+                <Send className="h-4 w-4" />
+              </Button>
+            </div>
+            <p className="text-xs text-gray-500 mt-1">Press Enter to send, Shift+Enter for new line</p>
+          </div>
+        </form>
       </div>
     </div>
   )

@@ -5,6 +5,8 @@ export async function POST(request: Request) {
   try {
     const { userName, userEmail, question } = await request.json();
 
+    console.log('Email request received:', { userName, userEmail, question: question?.substring(0, 100) + '...' });
+
     if (!question || typeof question !== 'string') {
       return NextResponse.json({ message: 'Question is required.' }, { status: 400 });
     }
@@ -49,14 +51,18 @@ LetsTransport Policy Assistant
       }, { status: 200 });
     }
 
+    console.log('RESEND_API_KEY found, initializing Resend...');
+
     // Initialize Resend
     const resend = new Resend(process.env.RESEND_API_KEY);
+    
+    console.log('Resend initialized, attempting to send email...');
 
     try {
       // Send actual email to HR
-      const { data, error } = await resend.emails.send({
-        from: 'LetsTransport AI <noreply@letstransport.team>',
-        to: ['vignesh.s@letstransport.team'],
+      const emailData = {
+        from: 'LetsTransport Policy Assistant <onboarding@resend.dev>',
+        to: ['rahul_ranjan@letstransport.team'],
         subject: emailSubject,
         html: `
           <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
@@ -83,15 +89,50 @@ LetsTransport Policy Assistant
           </div>
         `,
         text: emailContent
+      };
+
+      console.log('Sending email with data:', { 
+        from: emailData.from, 
+        to: emailData.to, 
+        subject: emailData.subject 
       });
+
+      const { data, error } = await resend.emails.send(emailData);
 
       if (error) {
         console.error('Resend email error:', error);
+        console.error('Error details:', JSON.stringify(error, null, 2));
+        
+        // Try a simpler email format as fallback
+        console.log('Attempting fallback with simpler email format...');
+        
+        const simpleEmailData = {
+          from: 'onboarding@resend.dev', // Even simpler from address
+          to: 'rahul_ranjan@letstransport.team', // Single recipient, not array
+          subject: emailSubject,
+          text: emailContent // Plain text only
+        };
+        
+        console.log('Fallback email data:', simpleEmailData);
+        
+        const { data: fallbackData, error: fallbackError } = await resend.emails.send(simpleEmailData);
+        
+        if (fallbackError) {
+          console.error('Fallback email also failed:', fallbackError);
+          return NextResponse.json({ 
+            message: 'Failed to send email to HR (both primary and fallback failed)',
+            success: false,
+            error: fallbackError.message,
+            originalError: error.message
+          }, { status: 500 });
+        }
+        
+        console.log('Fallback email sent successfully:', fallbackData);
         return NextResponse.json({ 
-          message: 'Failed to send email to HR',
-          success: false,
-          error: error.message
-        }, { status: 500 });
+          message: 'Email sent to HR successfully (via fallback)',
+          success: true,
+          emailId: fallbackData?.id
+        }, { status: 200 });
       }
 
       console.log('Email sent successfully to HR:', data);
@@ -102,19 +143,26 @@ LetsTransport Policy Assistant
         emailId: data?.id
       }, { status: 200 });
 
-    } catch (emailError) {
-      console.error('Email sending failed:', emailError);
-      
-      // Fallback: Log the email content if sending fails
-      console.log('Email to HR (fallback log):', {
-        to: 'vignesh.s@letstransport.team',
-        subject: emailSubject,
-        content: emailContent
+    } catch (emailError: any) {
+      console.error('Email sending failed with exception:', emailError);
+      console.error('Exception details:', {
+        message: emailError.message,
+        stack: emailError.stack,
+        name: emailError.name
       });
       
+      // Final fallback: Log the email content
+      console.log('=== EMAIL CONTENT FOR MANUAL PROCESSING ===');
+      console.log('TO:', 'rahul_ranjan@letstransport.team');
+      console.log('SUBJECT:', emailSubject);
+      console.log('CONTENT:');
+      console.log(emailContent);
+      console.log('=== END EMAIL CONTENT ===');
+      
       return NextResponse.json({ 
-        message: 'Email logged to console (email service unavailable)',
-        success: false
+        message: 'Email service failed but content logged for manual processing',
+        success: false,
+        error: emailError.message
       }, { status: 500 });
     }
 
