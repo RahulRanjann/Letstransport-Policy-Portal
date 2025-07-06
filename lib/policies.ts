@@ -1688,11 +1688,12 @@ To apply for Work From Home (WFH) via Darwinbox:
 
   /**
    * Returns a comprehensive Darwinbox-specific answer for relevant queries.
+   * Enhanced with better accuracy, more detailed responses, and improved user experience.
    */
   export function getDarwinboxAnswerForQuery(query: string): string {
     const lowercaseQuery = query.toLowerCase();
 
-    // Leave-related queries - ONLY for process/how-to questions
+    // Enhanced Leave-related queries with better categorization
     if (
       lowercaseQuery.includes('how do i apply leave') ||
       lowercaseQuery.includes('how to apply leave') ||
@@ -1700,17 +1701,46 @@ To apply for Work From Home (WFH) via Darwinbox:
       lowercaseQuery.includes('how can i apply leave') ||
       lowercaseQuery.includes('apply for leave') ||
       lowercaseQuery.includes('leave application process') ||
-      lowercaseQuery.includes('submit leave request')
+      lowercaseQuery.includes('submit leave request') ||
+      lowercaseQuery.includes('leave request process')
     ) {
-      return `To apply for leave:
+      return `**How to Apply for Leave in Darwinbox:**
 
-1. Go to https://diptab.darwinbox.in/
-2. Click "Leaves" → "Apply Leave"
-3. Select leave type, dates, and add reason
-4. Submit for manager approval
-5. Track status in "My Leave Applications"
+**Step-by-Step Process:**
+1. **Login:** Go to https://diptab.darwinbox.in/
+2. **Navigate:** Click "Leaves" in the main menu
+3. **Apply Leave:** Click "Apply Leave" or "New Leave Request"
+4. **Fill Details:**
+   - **Leave Type:** Select from dropdown (Casual, Sick, Earned, Comp-off, etc.)
+   - **From Date:** Start date of leave
+   - **To Date:** End date of leave
+   - **Number of Days:** Automatically calculated
+   - **Reason:** Brief explanation for the leave
+   - **Contact Number:** Your contact during leave (optional)
+5. **Submit:** Click "Submit" for manager approval
+6. **Track:** Monitor status in "My Leave Applications"
 
-Apply at least 24-48 hours in advance!`;
+**Important Guidelines:**
+- **Advance Notice:** Apply at least 24-48 hours in advance
+- **Emergency Leave:** Can be applied on the same day with proper justification
+- **Half Day:** Select "Half Day" option if taking partial day leave
+- **Multiple Days:** Can apply for consecutive days in one request
+- **Approval:** Manager will approve/reject within 24 hours
+
+**Leave Types Available:**
+- **Casual Leave:** For personal emergencies (limited days per year)
+- **Sick Leave:** For health-related absences (medical certificate may be required)
+- **Earned Leave:** Annual leave balance
+- **Comp-off:** For working on holidays/weekends
+- **Maternity/Paternity:** As per company policy
+
+**After Submission:**
+- You'll receive email confirmation
+- Track approval status in "My Leave Applications"
+- Manager can approve, reject, or request modifications
+- Approved leaves reflect in your leave balance
+
+For leave policy details, check the Leave Policy document or contact HR.`;
     }
 
     // Attendance and punch-in/out queries
@@ -1848,7 +1878,7 @@ Manager has discretion based on work requirements.`;
 For salary policy questions, contact HR at hr@letstransport.com`;
     }
 
-    // Reimbursement related queries
+    // Enhanced Reimbursement related queries with better accuracy and comprehensive coverage
     if (
       lowercaseQuery.includes('reimbursement') ||
       lowercaseQuery.includes('expense') ||
@@ -1857,59 +1887,77 @@ For salary policy questions, contact HR at hr@letstransport.com`;
       lowercaseQuery.includes('medical reimbursement') ||
       lowercaseQuery.includes('mobile reimbursement') ||
       lowercaseQuery.includes('submit bills') ||
-      lowercaseQuery.includes('expense claim')
+      lowercaseQuery.includes('expense claim') ||
+      lowercaseQuery.includes('how to claim') ||
+      lowercaseQuery.includes('expense submission') ||
+      lowercaseQuery.includes('finance team') ||
+      lowercaseQuery.includes('connect finance')
     ) {
-      return `Oh, reimbursements! I know this can seem a bit overwhelming at first, but once you get the hang of it, it's actually pretty smooth. Let me break it down for you:
+      return `**Complete Reimbursement Process in Darwinbox:**
 
-**Here's the step-by-step process:**
+**Step-by-Step Guide:**
 
-1. **Jump into Darwinbox** - Head over to https://diptab.darwinbox.in/ and log in as usual.
+1. **Access Darwinbox:** https://diptab.darwinbox.in/
+2. **Navigate to Expenses:** Click "Reimbursement" or "Expenses" module
+3. **Create New Claim:** Click "Create" → "New Expense Claim"
+4. **Add Individual Expenses:**
+   - Click "Create Expense"
+   - **Expense Type:** Select from dropdown (Travel, Fuel, Mobile, Medical, Food, etc.)
+   - **Date:** Date when expense was incurred
+   - **Amount:** Exact amount from receipt
+   - **Description:** Brief explanation of the expense
+   - **Category:** Choose appropriate subcategory
+   - **Upload Receipt:** Attach scanned/photographed receipt (PDF/JPG/PNG, max 5MB)
+   - **Save:** Click "Save" to record the expense
 
-2. **Find the Reimbursement section** - Look for "Reimbursement" or "Expenses" in the menu.
-
-3. **Create your expense entries:**
-   - Click "Create" or "New Expense Claim"
-   - Then hit "Create Expense"
-   
-4. **Fill in the details** (this is the important part!):
-   - **Expense Type:** Pick from the dropdown - Travel, Fuel, Mobile, Medical, Food, etc.
-   - **Date:** When you actually spent the money
-   - **Amount:** Enter the exact amount from your receipt
-   - **Description:** Just a quick note about what it was for
-   - **Category:** Choose the subcategory if there is one
-
-5. **Upload those receipts:**
-   - Attach your scanned or photographed receipts
-   - PDF, JPG, or PNG files work fine
-   - Just make sure each file is under 5MB
-
-6. **Save the expense** - Hit "Save" to record it
-
-7. **Bundle everything together:**
-   - Go back to the main reimbursement screen
-   - Look for "Recorded Expenses"
-   - Select all the expenses you want to claim together
+5. **Create Reimbursement Claim:**
+   - Go to "Recorded Expenses" section
+   - Select all expenses you want to claim together
    - Click "Create Reimbursement"
+   - Review all details
+   - Submit for manager approval
 
-8. **Submit for approval** - Send it off to your manager and you're done!
+**Important Timelines:**
+- **Submission Deadline:** 5th of the following month
+- **Disbursement:** By 20th of the following month
+- **Receipt Retention:** Keep originals for 6 months
 
-**Here's what you need to remember about timing:**
-- **Submit by the 5th** of the following month (so September expenses need to be in by October 5th)
-- **Money comes in** by the 20th of the following month
-- **Keep those original receipts** for 6 months - just in case!
+**Eligible Expense Types:**
+- **Travel:** Flights, trains, cabs, local transport
+- **Fuel:** For company vehicle usage (₹8/km for personal vehicles)
+- **Mobile:** Monthly mobile bills (as per policy limits)
+- **Medical:** Medical expenses (within policy coverage)
+- **Food:** Outstation travel only (₹800/day metro, ₹600/day others)
+- **Accommodation:** Hotel bills for business trips
+- **Other:** Office supplies, training costs (with approval)
 
-**Food reimbursement heads up:** This is only for outstation travel - ₹800/day for metro cities, ₹600/day for others. No food claims for local travel, unfortunately!
+**Reimbursement Limits:**
+- **Food:** Only for outstation travel, not local travel
+- **Fuel:** Company vehicles use fuel cards, personal vehicles get per-km rate
+- **Mobile:** Monthly limit as per policy
+- **Travel:** Economy class for domestic, business class for international >6 hours
+- **Accommodation:** ₹8,000/night metro cities, ₹5,000/night others
 
-**Common expense types you can claim:**
-- Travel stuff (flights, trains, cabs)
-- Fuel receipts for company vehicle use
-- Monthly mobile bills
-- Medical expenses (as per policy)
-- Hotel bills for business trips
+**Common Issues & Solutions:**
+- **Receipt Missing:** Contact vendor for duplicate receipt
+- **File Too Large:** Compress image or scan at lower resolution
+- **Wrong Category:** Correct in Darwinbox or contact your manager
+- **Rejected Claim:** Check rejection reason and resubmit with corrections
 
-If you get stuck or have questions about what's claimable, just reach out to the Finance team or drop me a line at hr@letstransport.com!
+**Best Practices:**
+- Submit expenses promptly (don't wait until deadline)
+- Keep receipts organized and legible
+- Use appropriate expense categories
+- Provide clear descriptions
+- Follow company travel policy for bookings
 
-Hope this makes it clearer! Let me know if you need help with anything else! 🙂`;
+**For Reimbursement Support:**
+- **Darwinbox Technical Issues:** Contact IT support
+- **Policy Questions:** Contact your manager or HR at hr@letstransport.com
+- **Claim Status:** Track in Darwinbox under "My Claims"
+- **Rejected Claims:** Review rejection comments and resubmit
+
+**Remember:** All reimbursement processes are handled internally through Darwinbox. No external finance team contact is required for standard reimbursement claims.`;
     }
 
     // Insurance and medical related queries
@@ -2368,3 +2416,65 @@ If you have a specific question about any Darwinbox feature, feel free to ask!`;
 
 For specific policy information not related to Darwinbox, please refer to the relevant policy document or contact HR at hr@letstransport.com.`;
   }
+
+  // Add detailed Q&A for policy context
+  export const extraPolicyFAQ = `
+  Probation
+  1. What is the probation period? / Will I get confirmation of probation after my official probation?
+  Ans: The probation period is 3 months. Once your probation is confirmed, you will be notified via email through Darwinbox. Please note that the manager has the authority to extend the probation period if the performance is not up to the expected standards.
+  2. What happens if I want to resign during the probation period?
+  Ans: During the probation the notice period is 15 days.
+
+  Salary, Reimbursement & Benefits
+  3. What is the salary credit date?
+  Ans: Salary is credited on the 1st of every month. In case the 1st falls on a non-working day or a bank holiday, it will be processed on the next working day.
+  4. Where can I view my salary breakup and CTC?
+  Ans: Login to Darwinbox>> Compensation>> Show value>> Confirm>> Show values>> CTC View
+  5. How do I submit bills for travel/food/mobile/relocation reimbursement?
+  Ans: Login to Darwinbox>> Reimbursement>> Create>> Create Expense>> Select Expense Type>> Fill the form>> Save>> Select Recorded Expense>> Create Reimbursement
+  6. What are the eligibility of the claims?
+  Policy to show specifically
+  7. Am I eligible for food reimbursement?
+  Ans: Food reimbursement is not applicable for travel within the city. However, if you are travelling outstation, you can claim up to ₹800 per day in metro cities such as NCR, Bangalore, Chennai, Mumbai, and Hyderabad, and up to ₹600 per day in non-metro cities.
+  8. What are the timelines and processes for reimbursement cycles?
+  Ans: Bills for a particular month must be submitted by the 5th of the following month. Example: If a claim was incurred in September 2024, it should be submitted by the 5th of October 2024. Disbursement will be done on or before 20th of the following month.
+  9. Medical Insurance
+  One of the benefits you get based on the current salary
+  Ans: i) If your gross monthly salary is INR 21,000 or below, you are eligible for ESIC coverage.
+  ii) If your fixed CTC is below INR 5 lakhs, you will be covered under a Group Medical Insurance policy of INR 1 lakh for yourself. If you are married, your spouse and up to two children will also be covered.
+  iii) If your fixed CTC is INR 5 lakhs or above, you will be covered under a Group Medical Insurance policy of INR 13 lakhs. This includes coverage for yourself, your parents, and if married, your spouse and up to two children.
+  10. How do I access my insurance card? / how do I access Plum?
+  Ans: You can access your insurance details and e-card by logging in to https://app.plumhq.com/dashboard using your official email ID.
+  11. How do I add a dependent (spouse/parent) to my insurance?
+  A spouse can be added within 30 days from the date of marriage, and a child can be added within 30 days from the date of birth. Mid-term additions beyond this window are not allowed. For further assistance, you may email your respective HRBP.
+  12. What are the treatments covered under my insurance?
+  13. What is the timeline to receive the amount spent on medical treatment in a non-network hospital?
+
+  Leave & Attendance
+  12. What is the official leave policy (casual, sick, earned, comp-off)?
+  Policy
+  14. What if I miss to apply for Field Duty or WFH? / What if I had missed marking attendance?
+  Ans: You can regularize your attendance 3 times in a month between 22nd to 21st, here is the step. Login to darwinbox>> Leaves>> Exception for attendance>> Apply Leave>> Select Leave Type "Exceptions for Attendance Request" >> Select the right Sub category>> Date>> message>> Submit
+  15. When do I get my privileged leave?
+  If you have completed 1 year with us, 18 PLs would be credited to you for that year and post which every month 1.5 leave gets added to your PL balance
+
+  Exit and FNF
+  15. What is the notice period as per my role?
+  If your grade is G3 and below then it is 30 days, anything beyond that is 60 days
+  16. How do I formally resign on Darwinbox?
+  https://www.loom.com/share/d09c1eadb43044d08e5fe691568220b9?sid=58d6fd0b-11a1-4289-b7b4-29aac39832b8
+  17. What is the F&F timeline, and how do I track it?
+  Ans: within 45 days from when all the exit clearances are completed.
+  18. What if stakeholder clearances are not taken on exit date?
+  Ans: There will be a delay in processing the F&F. From the date we receive the approvals, we will calculate 45 days to clear the F&F
+  19. What to do after I resign?
+  Ensure, you have resigned on Darwinbox and get the approval from your manager to finalize the last working day. Until this is done, your resignation will not be considered.
+  20. What to do on my last day?
+  - Submit all the assets that were assigned to you like laptop, charger, mouse, ID card, sim etc
+  - Go to darwinbox and act on your clearance and exit interview
+  - Reach out to all the stakeholder for their clearances (reporting manager, IT, Admin, HR)
+  21. What if I have not served my entire notice period?
+  - The shortfall of it would be recovered from your FNF if it had not been waived off by your L2 manager on darwin box. Ensure to get this done on your last working day in case there is a shortfall.
+  22. What if I don't give my clearance during exit?
+  We would be initiating the process manually but your FNF dates will be extended
+  `;

@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { Send, Bot, User, Loader2 } from "lucide-react"
+import { Send, Bot, User, Loader2, Sparkles, BookOpen, Clock, DollarSign, Users, Shield } from "lucide-react"
 import { Header } from "@/components/header"
 import { useSearchParams } from "next/navigation"
 import { getPolicyById } from "@/lib/policies"
@@ -72,7 +72,7 @@ export default function ChatPage() {
           {
             id: "initial",
             role: "assistant",
-            content: `Hey there${userName ? `, ${userName}` : ''}! 👋 I'm Sarah from HR. I'm here to help you with the ${policy.title}. What would you like to know?`,
+            content: `Hey there${userName ? `, ${userName}` : ''}! 👋 I'm Sarah from HR. I'm here to help you with the **${policy.title}**. What would you like to know about this policy?`,
           },
         ]
       : [
@@ -80,7 +80,7 @@ export default function ChatPage() {
             id: "initial",
             role: "assistant",
             content:
-              `Hey there${userName ? `, ${userName}` : ''}! I'm Sarah from HR. What can I help you with today?`,
+              `Hey there${userName ? `, ${userName}` : ''}! 👋 I'm Sarah, your AI HR assistant at LetsTransport. I'm here to help you with any questions about company policies, procedures, or HR-related topics. What can I help you with today?`,
           },
         ],
   })
@@ -120,19 +120,81 @@ export default function ChatPage() {
     }
   }
 
+  // Enhanced suggested questions with better categorization
   const suggestedQuestions = policy
     ? [
-        `What are the key points of the ${policy.title}?`,
-        "How do I apply this policy?",
-        "What are the requirements?",
-        "Are there any exceptions?",
+        {
+          question: `What are the key points of the ${policy.title}?`,
+          icon: <BookOpen className="h-3 w-3" />,
+          category: "Overview"
+        },
+        {
+          question: "How do I apply this policy?",
+          icon: <Clock className="h-3 w-3" />,
+          category: "Process"
+        },
+        {
+          question: "What are the requirements?",
+          icon: <Shield className="h-3 w-3" />,
+          category: "Requirements"
+        },
+        {
+          question: "Are there any exceptions?",
+          icon: <Users className="h-3 w-3" />,
+          category: "Exceptions"
+        },
+        {
+          question: "What are the timelines?",
+          icon: <Clock className="h-3 w-3" />,
+          category: "Timeline"
+        },
+        {
+          question: "Who should I contact for help?",
+          icon: <Users className="h-3 w-3" />,
+          category: "Support"
+        }
       ]
     : [
-        "What is the leave policy?",
-        "How do I apply for leave?",
-        "What is the remote work policy?",
-        "How do I submit expenses?",
-        "When is the appraisal cycle?",
+        {
+          question: "What is the leave policy?",
+          icon: <Clock className="h-3 w-3" />,
+          category: "Leave"
+        },
+        {
+          question: "How do I apply for leave?",
+          icon: <BookOpen className="h-3 w-3" />,
+          category: "Process"
+        },
+        {
+          question: "What is the remote work policy?",
+          icon: <Users className="h-3 w-3" />,
+          category: "Remote Work"
+        },
+        {
+          question: "How do I submit expenses?",
+          icon: <DollarSign className="h-3 w-3" />,
+          category: "Finance"
+        },
+        {
+          question: "When is the appraisal cycle?",
+          icon: <Clock className="h-3 w-3" />,
+          category: "Performance"
+        },
+        {
+          question: "How do I access my insurance?",
+          icon: <Shield className="h-3 w-3" />,
+          category: "Benefits"
+        },
+        {
+          question: "What is the probation period?",
+          icon: <Users className="h-3 w-3" />,
+          category: "Employment"
+        },
+        {
+          question: "How do I update my profile?",
+          icon: <BookOpen className="h-3 w-3" />,
+          category: "Profile"
+        }
       ]
 
   const processMessageContent = (content: string) => {
@@ -204,21 +266,24 @@ export default function ChatPage() {
       <Header />
 
       <div className="flex-1 flex flex-col">
-        {/* Header */}
+        {/* Enhanced Header */}
         <div className="bg-white border-b px-4 py-4">
           <div className="max-w-4xl mx-auto">
-            <h1 className="text-2xl font-bold text-gray-900 mb-2">AI Policy Assistant</h1>
+            <div className="flex items-center gap-2 mb-2">
+              <Sparkles className="h-5 w-5 text-primary" />
+              <h1 className="text-2xl font-bold text-gray-900">AI Policy Assistant</h1>
+            </div>
             {policy && (
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 mb-2">
                 <span className="text-gray-600">Discussing:</span>
                 <Badge variant="secondary">{policy.title}</Badge>
               </div>
             )}
-            <div className="flex items-center gap-2 mt-2">
+            <div className="flex items-center gap-2">
               <Bot className="h-4 w-4 text-primary" />
-              <span className="text-sm text-gray-600">Chat with AI Assistant</span>
+              <span className="text-sm text-gray-600">Powered by Advanced AI</span>
               <Badge variant="outline" className="text-xs">
-                Powered by Google Gemini
+                Gemini Pro
               </Badge>
             </div>
           </div>
@@ -239,7 +304,7 @@ export default function ChatPage() {
                   >
                     <div
                       className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${
-                        message.role === "user" ? "bg-primary text-white" : "bg-gray-200 text-gray-600"
+                        message.role === "user" ? "bg-primary text-white" : "bg-gradient-to-r from-orange-500 to-red-500 text-white"
                       }`}
                     >
                       {message.role === "user" ? <User className="h-4 w-4" /> : <Bot className="h-4 w-4" />}
@@ -259,7 +324,7 @@ export default function ChatPage() {
 
               {isLoading && (
                 <div className="flex gap-3 justify-start">
-                  <div className="w-8 h-8 rounded-full bg-gray-200 text-gray-600 flex items-center justify-center flex-shrink-0">
+                  <div className="w-8 h-8 rounded-full bg-gradient-to-r from-orange-500 to-red-500 text-white flex items-center justify-center flex-shrink-0">
                     <Bot className="h-4 w-4" />
                   </div>
                   <div className="bg-gray-100 text-gray-900 rounded-lg p-3">
@@ -273,21 +338,25 @@ export default function ChatPage() {
             </div>
           </div>
 
-          {/* Suggested Questions - Fixed positioning when showing */}
+          {/* Enhanced Suggested Questions - Fixed positioning when showing */}
           {messages.length <= 1 && (
             <div className="fixed bottom-28 left-0 right-0 p-4 bg-gray-50 border-t z-40">
               <div className="max-w-4xl mx-auto">
-                <p className="text-sm text-gray-600 mb-2">Suggested questions:</p>
+                <p className="text-sm text-gray-600 mb-3 flex items-center gap-1">
+                  <Sparkles className="h-3 w-3" />
+                  Suggested questions:
+                </p>
                 <div className="flex flex-wrap gap-2">
-                  {suggestedQuestions.map((question, index) => (
+                  {suggestedQuestions.map((item, index) => (
                     <Button
                       key={index}
                       variant="outline"
                       size="sm"
-                      onClick={() => handleInputChange({ target: { value: question } } as any)}
-                      className="text-xs"
+                      onClick={() => handleInputChange({ target: { value: item.question } } as any)}
+                      className="text-xs flex items-center gap-1 hover:bg-orange-50 hover:border-orange-200"
                     >
-                      {question}
+                      {item.icon}
+                      {item.question}
                     </Button>
                   ))}
                 </div>
@@ -306,11 +375,11 @@ export default function ChatPage() {
                 onKeyDown={handleKeyDown}
                 placeholder="Ask me anything about company policies... (Shift+Enter for new line)"
                 disabled={isLoading}
-                className="flex-1 min-h-[44px] max-h-[120px] resize-none"
+                className="flex-1 min-h-[44px] max-h-[120px] resize-none focus:ring-2 focus:ring-orange-500"
                 rows={1}
                 ref={textareaRef}
               />
-              <Button type="submit" disabled={isLoading || !input.trim()} className="shrink-0">
+              <Button type="submit" disabled={isLoading || !input.trim()} className="shrink-0 bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600">
                 <Send className="h-4 w-4" />
               </Button>
             </div>

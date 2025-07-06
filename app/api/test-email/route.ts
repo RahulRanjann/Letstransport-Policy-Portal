@@ -3,77 +3,64 @@ import { Resend } from 'resend';
 
 export async function GET() {
   try {
-    console.log('=== EMAIL SYSTEM TEST ===');
+    console.log('Testing email functionality...');
     
-    // Check environment variable
-    const apiKey = process.env.RESEND_API_KEY;
-    console.log('RESEND_API_KEY exists:', !!apiKey);
-    console.log('RESEND_API_KEY length:', apiKey?.length || 0);
-    
-    if (!apiKey) {
-      return NextResponse.json({
-        status: 'error',
-        message: 'RESEND_API_KEY not found in environment variables',
-        suggestion: 'Please set RESEND_API_KEY in your .env.local file'
-      });
+    if (!process.env.RESEND_API_KEY) {
+      return NextResponse.json({ 
+        error: 'RESEND_API_KEY not found in environment variables',
+        success: false 
+      }, { status: 500 });
     }
 
-    // Initialize Resend
-    const resend = new Resend(apiKey);
-    console.log('Resend client initialized');
-
-    // Test email data
-    const testEmailData = {
-      from: 'onboarding@resend.dev',
-      to: 'rahul_ranjan@letstransport.team',
-      subject: 'Test Email from LetsTransport Policy Portal',
-      text: 'This is a test email to verify the email system is working correctly.',
+    const resend = new Resend(process.env.RESEND_API_KEY);
+    
+    const emailData = {
+      from: 'LetsTransport Policy Assistant <onboarding@resend.dev>',
+      to: ['rahul_ranjan@letstransport.team'],
+      subject: 'Test Email from Policy Assistant',
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
           <h2 style="color: #e97317;">Test Email</h2>
-          <p>This is a test email to verify the email system is working correctly.</p>
-          <p>If you receive this email, the system is configured properly.</p>
-          <p><strong>Time:</strong> ${new Date().toISOString()}</p>
+          <p>This is a test email to verify the email functionality is working properly.</p>
+          <p><strong>Timestamp:</strong> ${new Date().toISOString()}</p>
+          <p>If you receive this email, the HR email fallback system is working correctly.</p>
         </div>
-      `
+      `,
+      text: `
+Test Email from Policy Assistant
+
+This is a test email to verify the email functionality is working properly.
+
+Timestamp: ${new Date().toISOString()}
+
+If you receive this email, the HR email fallback system is working correctly.
+      `.trim()
     };
 
-    console.log('Attempting to send test email...');
-    console.log('Email data:', { 
-      from: testEmailData.from, 
-      to: testEmailData.to, 
-      subject: testEmailData.subject 
-    });
-
-    const { data, error } = await resend.emails.send(testEmailData);
-
-    if (error) {
-      console.error('Test email failed:', error);
-      return NextResponse.json({
-        status: 'error',
-        message: 'Failed to send test email',
-        error: error,
-        details: JSON.stringify(error, null, 2)
-      });
-    }
-
-    console.log('Test email sent successfully:', data);
+    const { data, error } = await resend.emails.send(emailData);
     
-    return NextResponse.json({
-      status: 'success',
-      message: 'Test email sent successfully!',
-      emailId: data?.id,
-      sentTo: 'rahul_ranjan@letstransport.team',
-      timestamp: new Date().toISOString()
+    if (error) {
+      console.error('Resend test email error:', error);
+      return NextResponse.json({ 
+        error: 'Failed to send test email',
+        details: error,
+        success: false 
+      }, { status: 500 });
+    }
+    
+    console.log('Test email sent successfully:', data);
+    return NextResponse.json({ 
+      message: 'Test email sent successfully',
+      data: data,
+      success: true 
     });
 
-  } catch (error: any) {
-    console.error('Test email system error:', error);
-    return NextResponse.json({
-      status: 'error',
-      message: 'Email system test failed',
-      error: error.message,
-      stack: error.stack
-    });
+  } catch (error) {
+    console.error('Test email error:', error);
+    return NextResponse.json({ 
+      error: 'Test email failed',
+      details: error instanceof Error ? error.message : 'Unknown error',
+      success: false 
+    }, { status: 500 });
   }
 } 
