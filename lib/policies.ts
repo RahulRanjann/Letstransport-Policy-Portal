@@ -1693,6 +1693,26 @@ To apply for Work From Home (WFH) via Darwinbox:
   export function getDarwinboxAnswerForQuery(query: string): string {
     const lowercaseQuery = query.toLowerCase();
 
+    // Manager and reporting structure queries - these should trigger HR email
+    if (
+      lowercaseQuery.includes('who is my manager') ||
+      lowercaseQuery.includes('show my manager') ||
+      lowercaseQuery.includes('who is manager') ||
+      lowercaseQuery.includes('my manager') ||
+      lowercaseQuery.includes('reporting manager') ||
+      lowercaseQuery.includes('manager details') ||
+      lowercaseQuery.includes('manager information') ||
+      lowercaseQuery.includes('who do i report to') ||
+      lowercaseQuery.includes('reporting structure') ||
+      lowercaseQuery.includes('organizational chart') ||
+      lowercaseQuery.includes('org chart') ||
+      lowercaseQuery.includes('hierarchy') ||
+      lowercaseQuery.includes('team structure')
+    ) {
+      // Return a special response that will trigger HR email
+      return "I don't have that information. I've sent your question to HR and they'll get back to you directly.";
+    }
+
     // Enhanced Leave-related queries with better categorization
     if (
       lowercaseQuery.includes('how do i apply leave') ||
